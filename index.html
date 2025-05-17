@@ -16,8 +16,7 @@
     * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
+      margin: 0; padding: 20px;
       background: var(--bg-light);
       color: var(--text-dark);
       text-align: center;
@@ -25,13 +24,11 @@
     #language-switcher {
       display: flex;
       justify-content: center;
-      align-items: center;
       gap: 16px;
       margin-bottom: 24px;
     }
     #language-switcher img {
       width: 64px;
-      height: auto;
       cursor: pointer;
       border-radius: 8px;
       border: 2px solid #000;
@@ -114,9 +111,9 @@
 </head>
 <body>
   <div id="language-switcher">
-    <img src="images/brazil.png" alt="Português" id="flag-pt" onclick="selectLang('pt')" />
-    <img src="images/japan.png"  alt="日本語"     id="flag-ja" onclick="selectLang('ja')" />
-    <img src="images/indonesia.png" alt="Bahasa Indonesia" id="flag-id" onclick="selectLang('id')" />
+    <img src="brazil.png" alt="Português" id="flag-pt" onclick="selectLang('pt')" />
+    <img src="japan.png"  alt="日本語" id="flag-ja" onclick="selectLang('ja')" />
+    <img src="indonesia.png" alt="Bahasa Indonesia" id="flag-id" onclick="selectLang('id')" />
   </div>
 
   <h1 id="title">Calculadora de Média dos Pontos</h1>
@@ -164,16 +161,11 @@
     };
 
     function selectLang(lang) {
-      // salva escolha para página de resultado
       sessionStorage.setItem('lang', lang);
-
-      // destaca bandeira
       document.querySelectorAll('#language-switcher img').forEach(img =>
         img.classList.remove('selected')
       );
       document.getElementById('flag-' + lang).classList.add('selected');
-
-      // aplica textos
       const cfg = texts[lang];
       document.getElementById('title').textContent = cfg.title;
       ['a','b','c','d','e','f','g','h'].forEach((k,i) =>
@@ -183,7 +175,6 @@
       document.getElementById('btnClear').textContent = cfg.btnClear;
     }
 
-    // mantém idioma selecionado ao recarregar
     window.addEventListener('DOMContentLoaded', () => {
       const lang = sessionStorage.getItem('lang') || 'pt';
       selectLang(lang);
@@ -192,7 +183,6 @@
     function calcularMedia() {
       const vals = ['a','b','c','d','e','f','g','h']
         .map(id => parseFloat(document.getElementById(id).value) || 0);
-
       sessionStorage.setItem('points', JSON.stringify(vals));
       window.location.href = 'pagina2.html';
     }
