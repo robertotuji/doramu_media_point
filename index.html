@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calculadora de Média dos Pontos</title>
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -15,8 +15,8 @@
     }
     * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
       margin: 0; padding: 20px;
+      font-family: Arial, sans-serif;
       background: var(--bg-light);
       color: var(--text-dark);
       text-align: center;
@@ -101,9 +101,10 @@
     .actions button:hover { opacity: 0.9; }
     #btnCalc { background: var(--accent-color); }
     #btnClear { background: #000; }
+
+    /* EM TODAS AS TELAS MANTÉM DUAS COLUNAS */
     @media (max-width: 500px) {
-      .app-container { padding: 16px; }
-      .inputs { grid-template-columns: 1fr; }
+      .inputs input { padding: 6px; }
       #language-switcher img { width: 48px; }
       h1 { font-size: 1.5em; }
     }
@@ -112,7 +113,7 @@
 <body>
   <div id="language-switcher">
     <img src="brazil.png" alt="Português" id="flag-pt" onclick="selectLang('pt')" />
-    <img src="japan.png"  alt="日本語" id="flag-ja" onclick="selectLang('ja')" />
+    <img src="japan.png"  alt="日本語"     id="flag-ja" onclick="selectLang('ja')" />
     <img src="indonesia.png" alt="Bahasa Indonesia" id="flag-id" onclick="selectLang('id')" />
   </div>
 
