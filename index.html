@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Média dos Pontos</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --primary-color: #e53935;
+      --accent-color: #ff8f00;
+      --bg-light: #f5f5f5;
+      --text-dark: #333;
+      --shadow: rgba(0,0,0,0.1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      text-align: center;
+    }
+    #language-switcher {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    #language-switcher img {
+      width: 64px;
+      height: auto;
+      cursor: pointer;
+      border-radius: 8px;
+      border: 2px solid #000;
+      transition: border-color 0.2s;
+    }
+    #language-switcher img.selected {
+      border-color: var(--primary-color);
+    }
+    h1 {
+      font-size: 1.75em;
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+    .app-container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    .preview {
+      background: #ccc;
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    .preview img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .inputs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .inputs label {
+      display: block;
+      font-size: 0.9em;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-align: left;
+    }
+    .inputs input {
+      width: 100%;
+      padding: 8px;
+      border: 2px solid var(--accent-color);
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+    .actions button {
+      flex: 1;
+      padding: 12px;
+      font-size: 1em;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #fff;
+      transition: opacity 0.2s;
+    }
+    .actions button:hover { opacity: 0.9; }
+    #btnCalc { background: var(--accent-color); }
+    #btnClear { background: #000; }
+    @media (max-width: 500px) {
+      .app-container { padding: 16px; }
+      .inputs { grid-template-columns: 1fr; }
+      #language-switcher img { width: 48px; }
+      h1 { font-size: 1.5em; }
+    }
+  </style>
+</head>
+<body>
+  <div id="language-switcher">
+    <img src="images/brazil.png" alt="Português" id="flag-pt" onclick="selectLang('pt')" />
+    <img src="images/japan.png"  alt="日本語"     id="flag-ja" onclick="selectLang('ja')" />
+    <img src="images/indonesia.png" alt="Bahasa Indonesia" id="flag-id" onclick="selectLang('id')" />
+  </div>
+
+  <h1 id="title">Calculadora de Média dos Pontos</h1>
+
+  <div class="app-container">
+    <div class="preview">
+      <img src="doramu.png" alt="Diagrama de Pontos" />
+    </div>
+    <div class="inputs">
+      <div><label for="a" id="label-a">Ponto A</label><input type="number" id="a" /></div>
+      <div><label for="b" id="label-b">Ponto B</label><input type="number" id="b" /></div>
+      <div><label for="c" id="label-c">Ponto C</label><input type="number" id="c" /></div>
+      <div><label for="d" id="label-d">Ponto D</label><input type="number" id="d" /></div>
+      <div><label for="e" id="label-e">Ponto E</label><input type="number" id="e" /></div>
+      <div><label for="f" id="label-f">Ponto F</label><input type="number" id="f" /></div>
+      <div><label for="g" id="label-g">Ponto G</label><input type="number" id="g" /></div>
+      <div><label for="h" id="label-h">Ponto H</label><input type="number" id="h" /></div>
+    </div>
+    <div class="actions">
+      <button id="btnCalc" onclick="calcularMedia()">Calcular</button>
+      <button id="btnClear" onclick="limparCampos()">Limpar</button>
+    </div>
+  </div>
+
+  <script>
+    const texts = {
+      pt: {
+        title:   'Calculadora de Média dos Pontos',
+        labels:  ['Ponto A','Ponto B','Ponto C','Ponto D','Ponto E','Ponto F','Ponto G','Ponto H'],
+        btnCalc: 'Calcular',
+        btnClear:'Limpar'
+      },
+      ja: {
+        title:   '点の平均計算機',
+        labels:  ['A点','B点','C点','D点','E点','F点','G点','H点'],
+        btnCalc: '計算',
+        btnClear:'クリア'
+      },
+      id: {
+        title:   'Kalkulator Rata-Rata Titik',
+        labels:  ['Titik A','Titik B','Titik C','Titik D','Titik E','Titik F','Titik G','Titik H'],
+        btnCalc: 'Hitung',
+        btnClear:'Bersihkan'
+      }
+    };
+
+    function selectLang(lang) {
+      // salva escolha para página de resultado
+      sessionStorage.setItem('lang', lang);
+
+      // destaca bandeira
+      document.querySelectorAll('#language-switcher img').forEach(img =>
+        img.classList.remove('selected')
+      );
+      document.getElementById('flag-' + lang).classList.add('selected');
+
+      // aplica textos
+      const cfg = texts[lang];
+      document.getElementById('title').textContent = cfg.title;
+      ['a','b','c','d','e','f','g','h'].forEach((k,i) =>
+        document.getElementById('label-' + k).textContent = cfg.labels[i]
+      );
+      document.getElementById('btnCalc').textContent  = cfg.btnCalc;
+      document.getElementById('btnClear').textContent = cfg.btnClear;
+    }
+
+    // mantém idioma selecionado ao recarregar
+    window.addEventListener('DOMContentLoaded', () => {
+      const lang = sessionStorage.getItem('lang') || 'pt';
+      selectLang(lang);
+    });
+
+    function calcularMedia() {
+      const vals = ['a','b','c','d','e','f','g','h']
+        .map(id => parseFloat(document.getElementById(id).value) || 0);
+
+      sessionStorage.setItem('points', JSON.stringify(vals));
+      window.location.href = 'pagina2.html';
+    }
+
+    function limparCampos() {
+      ['a','b','c','d','e','f','g','h'].forEach(id =>
+        document.getElementById(id).value = ''
+      );
+      document.getElementById('a').focus();
+    }
+  </script>
+</body>
+</html>

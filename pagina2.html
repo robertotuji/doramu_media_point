@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resultado da Média dos Pontos</title>
+  <link rel="manifest" href="manifest.json"/>
+  <style>
+    :root {
+      --primary-color: #e53935;
+      --accent-color: #ff8f00;
+      --bg-light: #f5f5f5;
+      --text-dark: #333;
+      --shadow: rgba(0,0,0,0.1);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: var(--bg-light); color: var(--text-dark); text-align: center; }
+    #language-switcher { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
+    #language-switcher img { width: 64px; cursor: pointer; border-radius: 8px; border: 2px solid #000; transition: border-color 0.2s; }
+    #language-switcher img.selected { border-color: var(--primary-color); }
+    #langTitle { font-size: 1.75em; margin-bottom: 24px; font-weight: 600; }
+    .container { max-width: 500px; margin: 0 auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 12px var(--shadow); }
+    .diagram { position: relative; background: #ccc; border-radius: 8px; padding: 24px; margin-bottom: 24px; }
+    .diagram img { width: 100%; height: auto; display: block; }
+    .label { position: absolute; font-size: 0.9em; font-weight: 600; color: var(--text-dark); text-shadow: 0 0 2px #fff; }
+    .label.red { color: var(--primary-color); }
+    .A { top:12%; left:50%; transform: translate(-50%, -50%); }
+    .B { top:28%; left:50%; transform: translate(-50%, -50%); }
+    .C { top:62%; left:50%; transform: translate(-50%, -50%); }
+    .D { top:88%; left:50%; transform: translate(-50%, -50%); }
+    .E { top:50%; left:60%; transform: translate(-50%, -50%); }
+    .F { top:50%; left:90%; transform: translate(-50%, -50%); }
+    .G { top:50%; left:38%; transform: translate(-50%, -50%); }
+    .H { top:50%; left:8%; transform: translate(-50%, -50%); }
+    .summary { font-size: 1.1em; margin-bottom: 16px; font-weight: 500; }
+    .result-title { font-size: 1.2em; margin-bottom: 8px; font-weight: 600; }
+    .result { font-size: 2.5em; color: var(--primary-color); font-weight: 700; margin-bottom: 0; }
+    @media(max-width:520px) { #language-switcher img { width:48px; } .container, .diagram { padding:16px; } #langTitle { font-size:1.5em; } .result { font-size:2em; } }
+  </style>
+</head>
+<body>
+  <h2 id="langTitle">Selecione o idioma</h2>
+  <div id="language-switcher">
+    <img src="images/brazil.png" alt="Português" id="flag-pt" onclick="selectLang('pt')" />
+    <img src="images/japan.png" alt="日本語" id="flag-ja" onclick="selectLang('ja')" />
+    <img src="images/indonesia.png" alt="Bahasa Indonesia" id="flag-id" onclick="selectLang('id')" />
+  </div>
+  <div class="container">
+    <div class="diagram">
+      <img src="doramu2.png" alt="Diagrama de Pontos" />
+      <span id="lblA" class="label A"></span>
+      <span id="lblB" class="label B"></span>
+      <span id="lblC" class="label C"></span>
+      <span id="lblD" class="label D"></span>
+      <span id="lblE" class="label E"></span>
+      <span id="lblF" class="label F"></span>
+      <span id="lblG" class="label G"></span>
+      <span id="lblH" class="label H"></span>
+    </div>
+    <div class="summary" id="summary"></div>
+    <div class="result-title" id="resLabel"></div>
+    <div class="result" id="result"></div>
+  </div>
+  <script>
+    const texts2 = {
+      pt: { langTitle: 'Selecione o idioma', res: 'Resultado:', summary: (max, min, Lmax, Lmin) => `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}` },
+      ja: { langTitle: '言語を選択',         res: '結果:',      summary: (max, min, Lmax, Lmin) => `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}` },
+      id: { langTitle: 'Pilih bahasa',       res: 'Hasil:',     summary: (max, min, Lmax, Lmin) => `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}` }
+    };
+
+    function selectLang(lang) {
+      // destaca bandeira
+      document.querySelectorAll('#language-switcher img').forEach(img => img.classList.remove('selected'));
+      document.getElementById('flag-' + lang).classList.add('selected');
+      // texto do título de idioma
+      document.getElementById('langTitle').textContent = texts2[lang].langTitle;
+      // label de resultado
+      document.getElementById('resLabel').textContent = texts2[lang].res;
+      // resumo traduzido
+      const { max, min, Lmax, Lmin } = window._calcInfo;
+      document.getElementById('summary').textContent = texts2[lang].summary(max, min, Lmax, Lmin);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // recupera idioma
+      const lang = sessionStorage.getItem('lang') || 'pt';
+      // lê pontos
+      const keys = ['A','B','C','D','E','F','G','H'];
+      const pts = JSON.parse(sessionStorage.getItem('points') || '[]');
+      const max = Math.max(...pts), min = Math.min(...pts), avg = (max + min)/2;
+      const idxMax = pts.indexOf(max), idxMin = pts.indexOf(min);
+      const Lmax = keys[idxMax], Lmin = keys[idxMin];
+      // armazena info global para reuso
+      window._calcInfo = { max, min, Lmax, Lmin };
+      // preenche diagrama
+      pts.forEach((v,i) => {
+        const el = document.getElementById('lbl' + keys[i]);
+        el.textContent = `${keys[i]} = ${v}`;
+        if (i === idxMax || i === idxMin) el.classList.add('red');
+      });
+      // resumo e resultado
+      document.getElementById('resLabel').textContent = texts2[lang].res;
+      document.getElementById('summary').textContent = texts2[lang].summary(max, min, Lmax, Lmin);
+      // média formatada
+      const absAvg = Math.abs(avg).toFixed(1).replace('.', ',');
+      document.getElementById('result').textContent = (avg < 0 ? '–' : '') + absAvg;
+      // aplica idioma ao título de seleção
+      selectLang(lang);
+    });
+  </script>
+</body>
+</html>
