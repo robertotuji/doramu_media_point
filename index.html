@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calculadora de Média dos Pontos</title>
-  <link rel="manifest" href="manifest.json" />
   <style>
     :root {
       --primary-color: #e53935;
@@ -12,6 +12,13 @@
       --bg-light: #f5f5f5;
       --text-dark: #333;
       --shadow: rgba(0,0,0,0.1);
+    }
+    body.dark {
+      --primary-color: #ff7043;
+      --accent-color: #ffca28;
+      --bg-light: #121212;
+      --text-dark: #eee;
+      --shadow: rgba(255, 255, 255, 0.1);
     }
     * { box-sizing: border-box; }
     body {
@@ -21,26 +28,33 @@
       color: var(--text-dark);
       text-align: center;
     }
+    .preview {
+      background: #ccc;
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    body.dark .preview {
+      background: #000;
+    }
     #language-switcher {
       display: flex;
       justify-content: center;
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
     #language-switcher img {
-      width: 64px;
+      width: 48px;
       cursor: pointer;
       border-radius: 8px;
       border: 2px solid #000;
-      transition: border-color 0.2s;
     }
     #language-switcher img.selected {
       border-color: var(--primary-color);
     }
     h1 {
       font-size: 1.75em;
-      margin-bottom: 24px;
-      font-weight: 600;
+      margin-bottom: 16px;
     }
     .app-container {
       max-width: 400px;
@@ -50,18 +64,6 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px var(--shadow);
     }
-    .preview {
-      background: #ccc;
-      padding: 24px;
-      border-radius: 8px;
-      margin-bottom: 24px;
-    }
-    .preview img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-    }
     .inputs {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -69,11 +71,10 @@
       margin-bottom: 24px;
     }
     .inputs label {
-      display: block;
-      font-size: 0.9em;
-      font-weight: 600;
-      margin-bottom: 4px;
+      font-weight: bold;
       text-align: left;
+      display: block;
+      color: #000;
     }
     .inputs input {
       width: 100%;
@@ -82,31 +83,26 @@
       border-radius: 4px;
       font-size: 1em;
     }
-    .actions {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-    }
     .actions button {
-      flex: 1;
-      padding: 12px;
+      padding: 10px 20px;
       font-size: 1em;
       font-weight: 600;
       border: none;
       border-radius: 4px;
-      cursor: pointer;
+      margin: 0 8px;
       color: #fff;
-      transition: opacity 0.2s;
+      cursor: pointer;
     }
-    .actions button:hover { opacity: 0.9; }
     #btnCalc { background: var(--accent-color); }
     #btnClear { background: #000; }
-
-    /* EM TODAS AS TELAS MANTÉM DUAS COLUNAS */
-    @media (max-width: 500px) {
-      .inputs input { padding: 6px; }
-      #language-switcher img { width: 48px; }
-      h1 { font-size: 1.5em; }
+    #themeToggle {
+      margin: 12px 0;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 2px solid var(--primary-color);
+      background: none;
+      color: var(--text-dark);
+      cursor: pointer;
     }
   </style>
 </head>
@@ -117,21 +113,23 @@
     <img src="indonesia.png" alt="Bahasa Indonesia" id="flag-id" onclick="selectLang('id')" />
   </div>
 
+  <button id="themeToggle" onclick="toggleDarkMode()">🌙 Modo Noturno</button>
+
   <h1 id="title">Calculadora de Média dos Pontos</h1>
 
   <div class="app-container">
     <div class="preview">
-      <img src="doramu.png" alt="Diagrama de Pontos" />
+      <img id="mainImage" src="doramu2.png" alt="Visualização" />
     </div>
     <div class="inputs">
-      <div><label for="a" id="label-a">Ponto A</label><input type="number" id="a" /></div>
-      <div><label for="b" id="label-b">Ponto B</label><input type="number" id="b" /></div>
-      <div><label for="c" id="label-c">Ponto C</label><input type="number" id="c" /></div>
-      <div><label for="d" id="label-d">Ponto D</label><input type="number" id="d" /></div>
-      <div><label for="e" id="label-e">Ponto E</label><input type="number" id="e" /></div>
-      <div><label for="f" id="label-f">Ponto F</label><input type="number" id="f" /></div>
-      <div><label for="g" id="label-g">Ponto G</label><input type="number" id="g" /></div>
-      <div><label for="h" id="label-h">Ponto H</label><input type="number" id="h" /></div>
+      <div><label for="a" id="label-a">Ponto A</label><input id="a" type="number" /></div>
+      <div><label for="b" id="label-b">Ponto B</label><input id="b" type="number" /></div>
+      <div><label for="c" id="label-c">Ponto C</label><input id="c" type="number" /></div>
+      <div><label for="d" id="label-d">Ponto D</label><input id="d" type="number" /></div>
+      <div><label for="e" id="label-e">Ponto E</label><input id="e" type="number" /></div>
+      <div><label for="f" id="label-f">Ponto F</label><input id="f" type="number" /></div>
+      <div><label for="g" id="label-g">Ponto G</label><input id="g" type="number" /></div>
+      <div><label for="h" id="label-h">Ponto H</label><input id="h" type="number" /></div>
     </div>
     <div class="actions">
       <button id="btnCalc" onclick="calcularMedia()">Calcular</button>
@@ -139,61 +137,82 @@
     </div>
   </div>
 
-  <script>
-    const texts = {
-      pt: {
-        title:   'Calculadora de Média dos Pontos',
-        labels:  ['Ponto A','Ponto B','Ponto C','Ponto D','Ponto E','Ponto F','Ponto G','Ponto H'],
-        btnCalc: 'Calcular',
-        btnClear:'Limpar'
-      },
-      ja: {
-        title:   '点の平均計算機',
-        labels:  ['A点','B点','C点','D点','E点','F点','G点','H点'],
-        btnCalc: '計算',
-        btnClear:'クリア'
-      },
-      id: {
-        title:   'Kalkulator Rata-Rata Titik',
-        labels:  ['Titik A','Titik B','Titik C','Titik D','Titik E','Titik F','Titik G','Titik H'],
-        btnCalc: 'Hitung',
-        btnClear:'Bersihkan'
-      }
-    };
-
-    function selectLang(lang) {
-      sessionStorage.setItem('lang', lang);
-      document.querySelectorAll('#language-switcher img').forEach(img =>
-        img.classList.remove('selected')
-      );
-      document.getElementById('flag-' + lang).classList.add('selected');
-      const cfg = texts[lang];
-      document.getElementById('title').textContent = cfg.title;
-      ['a','b','c','d','e','f','g','h'].forEach((k,i) =>
-        document.getElementById('label-' + k).textContent = cfg.labels[i]
-      );
-      document.getElementById('btnCalc').textContent  = cfg.btnCalc;
-      document.getElementById('btnClear').textContent = cfg.btnClear;
+<script>
+  const texts = {
+    pt: {
+      title: 'Calculadora de Média dos Pontos',
+      labels: ['Ponto A','Ponto B','Ponto C','Ponto D','Ponto E','Ponto F','Ponto G','Ponto H'],
+      btnCalc: 'Calcular',
+      btnClear: 'Limpar',
+      theme: ['🌙 Modo Noturno', '☀️ Modo Claro']
+    },
+    ja: {
+      title: '点の平均計算機',
+      labels: ['A点','B点','C点','D点','E点','F点','G点','H点'],
+      btnCalc: '計算',
+      btnClear: 'クリア',
+      theme: ['🌙 ダークモード', '☀️ 明るいモード']
+    },
+    id: {
+      title: 'Kalkulator Rata-Rata Titik',
+      labels: ['Titik A','Titik B','Titik C','Titik D','Titik E','Titik F','Titik G','Titik H'],
+      btnCalc: 'Hitung',
+      btnClear: 'Bersihkan',
+      theme: ['🌙 Mode Gelap', '☀️ Mode Terang']
     }
+  };
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const lang = sessionStorage.getItem('lang') || 'pt';
-      selectLang(lang);
+  function updateThemeButton() {
+    const isDark = document.body.classList.contains('dark');
+    const lang = sessionStorage.getItem('lang') || 'pt';
+    const label = texts[lang].theme;
+    const btn = document.getElementById('themeToggle');
+    btn.textContent = isDark ? label[1] : label[0];
+    btn.style.color = isDark ? '#fff' : '#000';
+  }
+
+  function selectLang(lang) {
+    sessionStorage.setItem('lang', lang);
+    document.querySelectorAll('#language-switcher img').forEach(i => i.classList.remove('selected'));
+    document.getElementById('flag-' + lang).classList.add('selected');
+    const cfg = texts[lang];
+    document.getElementById('title').textContent = cfg.title;
+    ['a','b','c','d','e','f','g','h'].forEach((k, i) => {
+      document.getElementById('label-' + k).textContent = cfg.labels[i];
     });
+    document.getElementById('btnCalc').textContent = cfg.btnCalc;
+    document.getElementById('btnClear').textContent = cfg.btnClear;
+    updateThemeButton();
+  }
 
-    function calcularMedia() {
-      const vals = ['a','b','c','d','e','f','g','h']
-        .map(id => parseFloat(document.getElementById(id).value) || 0);
-      sessionStorage.setItem('points', JSON.stringify(vals));
-      window.location.href = 'pagina2.html';
-    }
+  function toggleDarkMode() {
+    const isDark = document.body.classList.toggle('dark');
+    sessionStorage.setItem('darkMode', isDark ? '1' : '0');
+    updateThemeButton();
+    document.getElementById('mainImage').src = isDark ? 'doramunight.png' : 'doramu2.png';
+  }
 
-    function limparCampos() {
-      ['a','b','c','d','e','f','g','h'].forEach(id =>
-        document.getElementById(id).value = ''
-      );
-      document.getElementById('a').focus();
+  function calcularMedia() {
+    const vals = ['a','b','c','d','e','f','g','h'].map(id => parseFloat(document.getElementById(id).value) || 0);
+    const max = Math.max(...vals);
+    const min = Math.min(...vals);
+    sessionStorage.setItem('points', JSON.stringify(vals));
+    sessionStorage.setItem('maxmin', JSON.stringify({ max, min }));
+    window.location.href = 'pagina2.html';
+  }
+
+  function limparCampos() {
+    ['a','b','c','d','e','f','g','h'].forEach(id => document.getElementById(id).value = '');
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const lang = sessionStorage.getItem('lang') || 'pt';
+    selectLang(lang);
+    if (sessionStorage.getItem('darkMode') === '1') {
+      document.body.classList.add('dark');
+      document.getElementById('mainImage').src = 'doramunight.png';
     }
-  </script>
+  });
+</script>
 </body>
 </html>
