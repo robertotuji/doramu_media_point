@@ -131,7 +131,7 @@
       font-size:2.5em;
       color:var(--primary-color);
       font-weight:700;
-      margin:0 0 24px; /* adiciona espaço antes do botão */
+      margin:0 0 24px;
     }
 
     /* Botão FECHAR */
@@ -161,35 +161,11 @@
 </head>
 <body>
   <div id="language-switcher">
-    <img src="back.png"
-         alt="Voltar"
-         class="icon-btn"
-         id="btn-back"
-         onclick="history.back()" />
-
-    <img src="brazil.png"
-         alt="Português"
-         class="flag"
-         id="flag-pt"
-         onclick="selectLang('pt')" />
-
-    <img src="japan.png"
-         alt="日本語"
-         class="flag"
-         id="flag-ja"
-         onclick="selectLang('ja')" />
-
-    <img src="indonesia.png"
-         alt="Bahasa Indonesia"
-         class="flag"
-         id="flag-id"
-         onclick="selectLang('id')" />
-
-    <img src="close.png"
-         alt="Fechar"
-         class="icon-btn"
-         id="btn-close"
-         onclick="window.close()" />
+    <img src="back.png" alt="Voltar" class="icon-btn" id="btn-back" onclick="history.back()" />
+    <img src="brazil.png" alt="Português" class="flag" id="flag-pt" onclick="selectLang('pt')" />
+    <img src="japan.png" alt="日本語" class="flag" id="flag-ja" onclick="selectLang('ja')" />
+    <img src="indonesia.png" alt="Bahasa Indonesia" class="flag" id="flag-id" onclick="selectLang('id')" />
+    <img src="close.png" alt="Fechar" class="icon-btn" id="btn-close" onclick="goHome()" />
   </div>
 
   <h2 id="langTitle">Selecione o idioma</h2>
@@ -212,7 +188,7 @@
     <div class="result" id="result"></div>
 
     <!-- Botão FECHAR -->
-    <button class="close-btn" onclick="window.close()">FECHAR</button>
+    <button class="close-btn" id="btnCloseText" onclick="goHome()">Fechar</button>
   </div>
 
   <script>
@@ -220,20 +196,20 @@
       pt: {
         langTitle: 'Selecione o idioma',
         res: 'Resultado:',
-        summary: (max,min,Lmax,Lmin) =>
-          `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
+        closeBtn: 'Fechar',
+        summary: (max,min,Lmax,Lmin) => `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
       },
       ja: {
         langTitle: '言語を選択',
         res: '結果:',
-        summary: (max,min,Lmax,Lmin) =>
-          `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
+        closeBtn: '閉じる',
+        summary: (max,min,Lmax,Lmin) => `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
       },
       id: {
         langTitle: 'Pilih bahasa',
         res: 'Hasil:',
-        summary: (max,min,Lmax,Lmin) =>
-          `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
+        closeBtn: 'Tutup',
+        summary: (max,min,Lmax,Lmin) => `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
       }
     };
 
@@ -252,19 +228,20 @@
 
     function selectLang(lang) {
       sessionStorage.setItem('lang', lang);
-      document.querySelectorAll('img.flag')
-        .forEach(img => img.classList.remove('selected'));
-      document.getElementById('flag-' + lang)
-        .classList.add('selected');
+      document.querySelectorAll('img.flag').forEach(img => img.classList.remove('selected'));
+      document.getElementById('flag-' + lang).classList.add('selected');
 
-      document.getElementById('langTitle')
-        .textContent = texts2[lang].langTitle;
-      document.getElementById('resLabel')
-        .textContent = texts2[lang].res;
+      document.getElementById('langTitle').textContent = texts2[lang].langTitle;
+      document.getElementById('resLabel').textContent   = texts2[lang].res;
+      document.getElementById('btnCloseText').textContent = texts2[lang].closeBtn;
 
       const { max, min, Lmax, Lmin } = window._calcInfo;
-      document.getElementById('summary').innerHTML =
-        summaryHTML(lang, max, min, Lmax, Lmin);
+      document.getElementById('summary').innerHTML = summaryHTML(lang, max, min, Lmax, Lmin);
+    }
+
+    function goHome() {
+      // retorna para index.html
+      window.location.href = 'index.html';
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -279,7 +256,7 @@
       keys.forEach((k,i) => {
         const el = document.getElementById('lbl'+k);
         const v  = pts[i];
-        if (i===idxMax||i===idxMin) {
+        if (i===idxMax || i===idxMin) {
           el.innerHTML = `${k} = <strong>${v}</strong>`;
           el.classList.add('red');
         } else {
@@ -287,11 +264,9 @@
         }
       });
 
-      // Calcula e exibe a média
       const avg = (max + min) / 2;
       const txt = Math.abs(avg).toFixed(1).replace('.', ',');
-      document.getElementById('result')
-        .textContent = (avg<0?'–':'')+txt;
+      document.getElementById('result').textContent = (avg<0?'–':'') + txt;
 
       selectLang(lang);
     });
