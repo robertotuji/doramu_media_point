@@ -4,26 +4,23 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Resultado da Média dos Pontos</title>
+
+  <!-- PWA manifest + tema -->
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#ff8800"/>
+
+  <!-- ícone iOS -->
   <link rel="apple-touch-icon" href="app-icon.png" sizes="180x180"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Calc-Média"/>
+
   <style>
     :root {
       --primary-color: #e53935;
       --bg-light: #f5f5f5;
       --text-dark: #333;
       --shadow: rgba(0,0,0,0.1);
-    }
-    body.dark {
-      --primary-color: #ff7043;
-      --bg-light: #121212;
-      --text-dark: #eee;
-      --shadow: rgba(255, 255, 255, 0.1);
-      background: var(--bg-light);
-      color: var(--text-dark);
     }
     * { box-sizing: border-box; }
     body {
@@ -34,6 +31,8 @@
       text-align:center;
       position:relative;
     }
+
+    /* Barra de idioma + ícones */
     #language-switcher {
       display:flex;
       justify-content:center;
@@ -76,16 +75,6 @@
       font-weight:600;
     }
 
-    #themeToggle {
-      margin-top: 10px;
-      padding: 8px 16px;
-      font-size: 0.9em;
-      border-radius: 6px;
-      border: 2px solid var(--primary-color);
-      background: none;
-      color: var(--text-dark);
-    }
-
     .container {
       max-width:500px;
       margin:0 auto;
@@ -106,10 +95,11 @@
       height:auto;
       display:block;
     }
+
     .label {
       position:absolute;
       font-size:.9em;
-      color:#000;
+      color:var(--text-dark);
       text-shadow:0 0 2px #fff;
     }
     .label.red,
@@ -131,13 +121,11 @@
       font-size:1.1em;
       margin-bottom:16px;
       font-weight:500;
-      color: #000;
     }
     .result-title {
       font-size:1.2em;
       margin-bottom:8px;
       font-weight:600;
-      color: #000;
     }
     .result {
       font-size:2.5em;
@@ -146,6 +134,7 @@
       margin:0 0 24px;
     }
 
+    /* Botão FECHAR */
     .close-btn {
       padding: 12px 24px;
       font-size: 1em;
@@ -172,22 +161,43 @@
 </head>
 <body>
   <div id="language-switcher">
-    <img src="back.png" alt="Voltar" class="icon-btn" id="btn-back" onclick="history.back()" />
-    <img src="brazil.png" alt="Português" class="flag" id="flag-pt" onclick="selectLang('pt')" />
-    <img src="japan.png"  alt="日本語" class="flag" id="flag-ja" onclick="selectLang('ja')" />
-    <img src="indonesia.png" alt="Bahasa Indonesia" class="flag" id="flag-id" onclick="selectLang('id')" />
-    <img src="close.png" alt="Fechar" class="icon-btn" id="btn-close" onclick="history.back()" />
-  </div>
+    <!-- Botão Voltar -->
+    <img src="back.png"
+         alt="Voltar"
+         class="icon-btn"
+         id="btn-back"
+         onclick="history.back()" />
 
-  <div style="margin-bottom: 16px;">
-    <button onclick="toggleDarkMode()" id="themeToggle">🌙 Modo Noturno</button>
+    <!-- Bandeiras -->
+    <img src="brazil.png"
+         alt="Português"
+         class="flag"
+         id="flag-pt"
+         onclick="selectLang('pt')" />
+    <img src="japan.png"
+         alt="日本語"
+         class="flag"
+         id="flag-ja"
+         onclick="selectLang('ja')" />
+    <img src="indonesia.png"
+         alt="Bahasa Indonesia"
+         class="flag"
+         id="flag-id"
+         onclick="selectLang('id')" />
+
+    <!-- Botão Fechar (ícone) -->
+    <img src="close.png"
+         alt="Fechar"
+         class="icon-btn"
+         id="btn-close"
+         onclick="history.back()" />
   </div>
 
   <h2 id="langTitle">Selecione o idioma</h2>
 
   <div class="container">
     <div class="diagram">
-      <img id="mainImage" src="doramu2.png" alt="Diagrama de Pontos"/>
+      <img src="doramu2.png" alt="Diagrama de Pontos"/>
       <span id="lblA" class="label A"></span>
       <span id="lblB" class="label B"></span>
       <span id="lblC" class="label C"></span>
@@ -202,6 +212,7 @@
     <div class="result-title" id="resLabel"></div>
     <div class="result" id="result"></div>
 
+    <!-- Botão FECHAR (texto) -->
     <button class="close-btn" id="btnCloseText" onclick="history.back()">Fechar</button>
   </div>
 
@@ -211,40 +222,24 @@
         langTitle: 'Selecione o idioma',
         res: 'Resultado:',
         closeBtn: 'Fechar',
-        theme: ['🌙 Modo Noturno', '☀️ Modo Claro'],
-        summary: (max,min,Lmax,Lmin) => `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
+        summary: (max,min,Lmax,Lmin) =>
+          `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
       },
       ja: {
         langTitle: '言語を選択',
         res: '結果:',
         closeBtn: '閉じる',
-        theme: ['🌙 ダークモード', '☀️ 明るいモード'],
-        summary: (max,min,Lmax,Lmin) => `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
+        summary: (max,min,Lmax,Lmin) =>
+          `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
       },
       id: {
         langTitle: 'Pilih bahasa',
         res: 'Hasil:',
         closeBtn: 'Tutup',
-        theme: ['🌙 Mode Gelap', '☀️ Mode Terang'],
-        summary: (max,min,Lmax,Lmin) => `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
+        summary: (max,min,Lmax,Lmin) =>
+          `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
       }
     };
-
-    function updateThemeButton() {
-      const isDark = document.body.classList.contains('dark');
-      const lang = sessionStorage.getItem('lang') || 'pt';
-      const label = texts2[lang].theme;
-      document.getElementById('themeToggle').textContent = isDark ? label[1] : label[0];
-      document.getElementById('themeToggle').style.color = isDark ? '#fff' : '#000';
-    }
-
-    function toggleDarkMode() {
-      const img = document.getElementById('mainImage');
-      const isDark = document.body.classList.toggle('dark');
-      sessionStorage.setItem('darkMode', isDark ? '1' : '0');
-      img.src = isDark ? 'doramunight.png' : 'doramu2.png';
-      updateThemeButton();
-    }
 
     function selectLang(lang) {
       sessionStorage.setItem('lang', lang);
@@ -252,9 +247,10 @@
         img.classList.remove('selected')
       );
       document.getElementById('flag-' + lang).classList.add('selected');
+
       document.getElementById('langTitle').textContent = texts2[lang].langTitle;
+      document.getElementById('resLabel').textContent   = texts2[lang].res;
       document.getElementById('btnCloseText').textContent = texts2[lang].closeBtn;
-      updateThemeButton();
 
       const { max, min, Lmax, Lmin } = window._calcInfo;
       document.getElementById('summary').innerHTML =
@@ -288,11 +284,6 @@
       document.getElementById('result').textContent = (avg<0?'–':'')+txt;
 
       selectLang(lang);
-      if (sessionStorage.getItem('darkMode') === '1') {
-        document.body.classList.add('dark');
-        document.getElementById('mainImage').src = 'doramunight.png';
-        updateThemeButton();
-      }
     });
   </script>
 </body>
