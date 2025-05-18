@@ -41,18 +41,28 @@
       position:relative;
     }
     img.flag {
-      width:64px; cursor:pointer;
-      border:2px solid #000; border-radius:8px;
+      width:64px;
+      cursor:pointer;
+      border:2px solid #000;
+      border-radius:8px;
       transition:border-color .2s;
     }
-    img.flag.selected { border-color:var(--primary-color); }
+    img.flag.selected {
+      border-color:var(--primary-color);
+    }
     .icon-btn {
-      width:40px; height:40px;
-      background:#fff; border:2px solid #000;
+      width:40px;
+      height:40px;
+      background:#fff;
+      border:2px solid #000;
       border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 1px 4px rgba(0,0,0,0.2);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       cursor:pointer;
-      position:absolute; top:0;
+      position:absolute;
+      top:0;
       transition:background .2s;
     }
     .icon-btn:hover { background:#eee; }
@@ -60,28 +70,44 @@
     #btn-close { right:-60px; }
 
     h2#langTitle {
-      font-size:1.75em; margin-bottom:24px; font-weight:600;
+      font-size:1.75em;
+      margin-bottom:24px;
+      font-weight:600;
     }
 
     .container {
-      max-width:500px; margin:0 auto;
-      background:#fff; padding:24px;
-      border-radius:8px; box-shadow:0 2px 12px var(--shadow);
+      max-width:500px;
+      margin:0 auto;
+      background:#fff;
+      padding:24px;
+      border-radius:8px;
+      box-shadow:0 2px 12px var(--shadow);
     }
     .diagram {
       position:relative;
-      background:#ccc; border-radius:8px;
-      padding:24px; margin-bottom:24px;
+      background:#ccc;
+      border-radius:8px;
+      padding:24px;
+      margin-bottom:24px;
     }
     .diagram img {
-      width:100%; height:auto; display:block;
+      width:100%;
+      height:auto;
+      display:block;
     }
 
     .label {
-      position:absolute; font-size:.9em;
-      color:var(--text-dark); text-shadow:0 0 2px #fff;
+      position:absolute;
+      font-size:.9em;
+      color:var(--text-dark);
+      text-shadow:0 0 2px #fff;
     }
-    .label.red { color:var(--primary-color); font-weight:bold; }
+    .label.red,
+    .label.red strong,
+    .red {
+      color: var(--primary-color) !important;
+      font-weight: bold;
+    }
     .A { top:12%; left:50%; transform:translate(-50%,-50%); }
     .B { top:28%; left:50%; transform:translate(-50%,-50%); }
     .C { top:62%; left:50%; transform:translate(-50%,-50%); }
@@ -92,25 +118,38 @@
     .H { top:50%; left:8%;  transform:translate(-50%,-50%); }
 
     .summary {
-      font-size:1.1em; margin-bottom:16px; font-weight:500;
+      font-size:1.1em;
+      margin-bottom:16px;
+      font-weight:500;
     }
     .result-title {
-      font-size:1.2em; margin-bottom:8px; font-weight:600;
+      font-size:1.2em;
+      margin-bottom:8px;
+      font-weight:600;
     }
     .result {
-      font-size:2.5em; color:var(--primary-color);
-      font-weight:700; margin:0 0 24px;
+      font-size:2.5em;
+      color:var(--primary-color);
+      font-weight:700;
+      margin:0 0 24px;
     }
 
     /* Botão FECHAR */
     .close-btn {
-      padding:12px 24px; font-size:1em; font-weight:600;
-      color:#fff; background:var(--primary-color);
-      border:none; border-radius:12px; cursor:pointer;
-      box-shadow:0 2px 6px var(--shadow);
-      transition:opacity .2s;
+      padding: 12px 24px;
+      font-size: 1em;
+      font-weight: 600;
+      color: #fff;
+      background: var(--primary-color);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px var(--shadow);
+      transition: opacity 0.2s;
     }
-    .close-btn:hover { opacity:0.9; }
+    .close-btn:hover {
+      opacity: 0.9;
+    }
 
     @media(max-width:520px) {
       img.flag { width:48px; }
@@ -122,17 +161,39 @@
 </head>
 <body>
   <div id="language-switcher">
-    <!-- Voltar -->
-    <img src="back.png" alt="Voltar" class="icon-btn" id="btn-back" onclick="history.back()" />
+    <!-- Botão Voltar -->
+    <img src="back.png"
+         alt="Voltar"
+         class="icon-btn"
+         id="btn-back"
+         onclick="history.back()" />
+
     <!-- Bandeiras -->
-    <img src="brazil.png" alt="Português" class="flag" id="flag-pt" onclick="selectLang('pt')" />
-    <img src="japan.png"  alt="日本語"      class="flag" id="flag-ja" onclick="selectLang('ja')" />
-    <img src="indonesia.png" alt="Bahasa Indonesia" class="flag" id="flag-id" onclick="selectLang('id')" />
-    <!-- Fechar (ícone) -->
-    <img src="close.png" alt="Fechar" class="icon-btn" id="btn-close" onclick="history.back()" />
+    <img src="brazil.png"
+         alt="Português"
+         class="flag"
+         id="flag-pt"
+         onclick="selectLang('pt')" />
+    <img src="japan.png"
+         alt="日本語"
+         class="flag"
+         id="flag-ja"
+         onclick="selectLang('ja')" />
+    <img src="indonesia.png"
+         alt="Bahasa Indonesia"
+         class="flag"
+         id="flag-id"
+         onclick="selectLang('id')" />
+
+    <!-- Botão Fechar (ícone) -->
+    <img src="close.png"
+         alt="Fechar"
+         class="icon-btn"
+         id="btn-close"
+         onclick="history.back()" />
   </div>
 
-  <h2 id="langTitle">Resultado da Média dos Pontos</h2>
+  <h2 id="langTitle">Selecione o idioma</h2>
 
   <div class="container">
     <div class="diagram">
@@ -151,28 +212,28 @@
     <div class="result-title" id="resLabel"></div>
     <div class="result" id="result"></div>
 
-    <!-- Fechar (texto) -->
+    <!-- Botão FECHAR (texto) -->
     <button class="close-btn" id="btnCloseText" onclick="history.back()">Fechar</button>
   </div>
 
   <script>
     const texts2 = {
       pt: {
-        langTitle: 'Resultado da Média dos Pontos',
+        langTitle: 'Selecione o idioma',
         res: 'Resultado:',
         closeBtn: 'Fechar',
         summary: (max,min,Lmax,Lmin) =>
           `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
       },
       ja: {
-        langTitle: '平均結果',
+        langTitle: '言語を選択',
         res: '結果:',
         closeBtn: '閉じる',
         summary: (max,min,Lmax,Lmin) =>
           `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
       },
       id: {
-        langTitle: 'Hasil Rata-Rata Titik',
+        langTitle: 'Pilih bahasa',
         res: 'Hasil:',
         closeBtn: 'Tutup',
         summary: (max,min,Lmax,Lmin) =>
@@ -182,7 +243,9 @@
 
     function selectLang(lang) {
       sessionStorage.setItem('lang', lang);
-      document.querySelectorAll('img.flag').forEach(img => img.classList.remove('selected'));
+      document.querySelectorAll('img.flag').forEach(img =>
+        img.classList.remove('selected')
+      );
       document.getElementById('flag-' + lang).classList.add('selected');
 
       document.getElementById('langTitle').textContent = texts2[lang].langTitle;
@@ -192,36 +255,33 @@
       const { max, min, Lmax, Lmin } = window._calcInfo;
       document.getElementById('summary').innerHTML =
         texts2[lang].summary(max, min, Lmax, Lmin)
-          .replace(
-            `${Lmax} = ${max}`,
-            `<span class="red">${Lmax} = ${max}</span>`
-          )
-          .replace(
-            `${Lmin} = ${min}`,
-            `<span class="red">${Lmin} = ${min}</span>`
-          );
+          .replace(`${Lmax} = ${max}`, `<span class="red">${Lmax} = ${max}</span>`)
+          .replace(`${Lmin} = ${min}`, `<span class="red">${Lmin} = ${min}</span>`);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       const lang = sessionStorage.getItem('lang') || 'pt';
       const keys = ['A','B','C','D','E','F','G','H'];
-      const pts = JSON.parse(sessionStorage.getItem('points') || '[]');
-      const max = Math.max(...pts), min = Math.min(...pts);
+      const pts  = JSON.parse(sessionStorage.getItem('points') || '[]');
+      const max  = Math.max(...pts), min = Math.min(...pts);
       const idxMax = pts.indexOf(max), idxMin = pts.indexOf(min);
       const Lmax = keys[idxMax], Lmin = keys[idxMin];
       window._calcInfo = { max, min, Lmax, Lmin };
 
       keys.forEach((k,i) => {
-        const el = document.getElementById('lbl' + k);
-        el.textContent = `${k} = ${pts[i]}`;
-        if (i === idxMax || i === idxMin) {
+        const el = document.getElementById('lbl'+k);
+        const v  = pts[i];
+        if (i===idxMax||i===idxMin) {
+          el.innerHTML = `${k} = <strong>${v}</strong>`;
           el.classList.add('red');
+        } else {
+          el.textContent = `${k} = ${v}`;
         }
       });
 
       const avg = (max + min) / 2;
-      const formatted = (avg < 0 ? '–' : '') + Math.abs(avg).toFixed(1).replace('.', ',');
-      document.getElementById('result').textContent = formatted;
+      const txt = Math.abs(avg).toFixed(1).replace('.', ',');
+      document.getElementById('result').textContent = (avg<0?'–':'')+txt;
 
       selectLang(lang);
     });
