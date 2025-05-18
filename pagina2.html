@@ -10,7 +10,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Calc-Média"/>
-
   <style>
     :root {
       --primary-color: #e53935;
@@ -77,6 +76,16 @@
       font-weight:600;
     }
 
+    #themeToggle {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 0.9em;
+      border-radius: 6px;
+      border: 2px solid var(--primary-color);
+      background: none;
+      color: var(--text-dark);
+    }
+
     .container {
       max-width:500px;
       margin:0 auto;
@@ -98,10 +107,9 @@
       display:block;
     }
     .label {
-      color: var(--text-dark);
       position:absolute;
       font-size:.9em;
-      color:var(--text-dark);
+      color:#000;
       text-shadow:0 0 2px #fff;
     }
     .label.red,
@@ -120,19 +128,18 @@
     .H { top:50%; left:8%;  transform:translate(-50%,-50%); }
 
     .summary {
-      color: var(--text-dark);
       font-size:1.1em;
       margin-bottom:16px;
       font-weight:500;
+      color: #000;
     }
     .result-title {
-      color: var(--text-dark);
       font-size:1.2em;
       margin-bottom:8px;
       font-weight:600;
+      color: #000;
     }
     .result {
-      color: var(--primary-color);
       font-size:2.5em;
       color:var(--primary-color);
       font-weight:700;
@@ -159,8 +166,7 @@
       img.flag { width:48px; }
       .container, .diagram { padding:16px; }
       h2#langTitle { font-size:1.5em; }
-      .result {
-      color: var(--primary-color); font-size:2em; }
+      .result { font-size:2em; }
     }
   </style>
 </head>
@@ -205,66 +211,56 @@
         langTitle: 'Selecione o idioma',
         res: 'Resultado:',
         closeBtn: 'Fechar',
-        summary: (max,min,Lmax,Lmin) =>
-          `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
+        theme: ['🌙 Modo Noturno', '☀️ Modo Claro'],
+        summary: (max,min,Lmax,Lmin) => `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
       },
       ja: {
         langTitle: '言語を選択',
         res: '結果:',
         closeBtn: '閉じる',
-        summary: (max,min,Lmax,Lmin) =>
-          `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
+        theme: ['🌙 ダークモード', '☀️ 明るいモード'],
+        summary: (max,min,Lmax,Lmin) => `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
       },
       id: {
         langTitle: 'Pilih bahasa',
         res: 'Hasil:',
         closeBtn: 'Tutup',
-        summary: (max,min,Lmax,Lmin) =>
-          `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
+        theme: ['🌙 Mode Gelap', '☀️ Mode Terang'],
+        summary: (max,min,Lmax,Lmin) => `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
       }
     };
 
     function updateThemeButton() {
-  const isDark = document.body.classList.contains('dark');
-  const lang = sessionStorage.getItem('lang') || 'pt';
-  const label = {
-    pt: isDark ? '☀️ Modo Claro' : '🌙 Modo Noturno',
-    ja: isDark ? '☀️ 明るいモード' : '🌙 ダークモード',
-    id: isDark ? '☀️ Mode Terang' : '🌙 Mode Gelap'
-  };
-  document.getElementById('themeToggle').textContent = label[lang];
-}
+      const isDark = document.body.classList.contains('dark');
+      const lang = sessionStorage.getItem('lang') || 'pt';
+      const label = texts2[lang].theme;
+      document.getElementById('themeToggle').textContent = isDark ? label[1] : label[0];
+      document.getElementById('themeToggle').style.color = isDark ? '#fff' : '#000';
+    }
 
-function selectLang(lang) {
+    function toggleDarkMode() {
+      const img = document.getElementById('mainImage');
+      const isDark = document.body.classList.toggle('dark');
+      sessionStorage.setItem('darkMode', isDark ? '1' : '0');
+      img.src = isDark ? 'doramunight.png' : 'doramu2.png';
+      updateThemeButton();
+    }
+
+    function selectLang(lang) {
       sessionStorage.setItem('lang', lang);
       document.querySelectorAll('img.flag').forEach(img =>
         img.classList.remove('selected')
       );
       document.getElementById('flag-' + lang).classList.add('selected');
       document.getElementById('langTitle').textContent = texts2[lang].langTitle;
-      updateThemeButton();
-      document.getElementById('resLabel').textContent   = texts2[lang].res;
       document.getElementById('btnCloseText').textContent = texts2[lang].closeBtn;
       updateThemeButton();
+
       const { max, min, Lmax, Lmin } = window._calcInfo;
       document.getElementById('summary').innerHTML =
         texts2[lang].summary(max, min, Lmax, Lmin)
           .replace(`${Lmax} = ${max}`, `<span class="red">${Lmax} = ${max}</span>`)
           .replace(`${Lmin} = ${min}`, `<span class="red">${Lmin} = ${min}</span>`);
-    }
-
-    function toggleDarkMode() {
-  const img = document.getElementById('mainImage');
-  const isDark = document.body.classList.toggle('dark');
-  sessionStorage.setItem('darkMode', isDark ? '1' : '0');
-  img.src = isDark ? 'doramunight.png' : 'doramu2.png';
-  updateThemeButton();
-}
-  const img = document.getElementById('mainImage');
-      const isDark = document.body.classList.toggle('dark');
-      sessionStorage.setItem('darkMode', isDark ? '1' : '0');
-      document.getElementById('themeToggle').textContent = isDark ? '☀️ Modo Claro' : '🌙 Modo Noturno';
-  img.src = isDark ? 'doramunight.png' : 'doramu2.png';
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -275,6 +271,7 @@ function selectLang(lang) {
       const idxMax = pts.indexOf(max), idxMin = pts.indexOf(min);
       const Lmax = keys[idxMax], Lmin = keys[idxMin];
       window._calcInfo = { max, min, Lmax, Lmin };
+
       keys.forEach((k,i) => {
         const el = document.getElementById('lbl'+k);
         const v  = pts[i];
@@ -285,15 +282,16 @@ function selectLang(lang) {
           el.textContent = `${k} = ${v}`;
         }
       });
+
       const avg = (max + min) / 2;
       const txt = Math.abs(avg).toFixed(1).replace('.', ',');
       document.getElementById('result').textContent = (avg<0?'–':'')+txt;
+
       selectLang(lang);
-  updateThemeButton();
       if (sessionStorage.getItem('darkMode') === '1') {
         document.body.classList.add('dark');
+        document.getElementById('mainImage').src = 'doramunight.png';
         updateThemeButton();
-  document.getElementById('mainImage').src = 'doramunight.png';
       }
     });
   </script>
