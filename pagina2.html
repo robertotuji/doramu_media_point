@@ -32,7 +32,7 @@
       position:relative;
     }
 
-    /* language-bar + icons */
+    /* Barra de idioma + ícones */
     #language-switcher {
       display:flex;
       justify-content:center;
@@ -161,11 +161,36 @@
 </head>
 <body>
   <div id="language-switcher">
-    <img src="back.png" alt="Voltar" class="icon-btn" id="btn-back" onclick="history.back()" />
-    <img src="brazil.png" alt="Português" class="flag" id="flag-pt" onclick="selectLang('pt')" />
-    <img src="japan.png" alt="日本語" class="flag" id="flag-ja" onclick="selectLang('ja')" />
-    <img src="indonesia.png" alt="Bahasa Indonesia" class="flag" id="flag-id" onclick="selectLang('id')" />
-    <img src="close.png" alt="Fechar" class="icon-btn" id="btn-close" onclick="goHome()" />
+    <!-- Botão Voltar -->
+    <img src="back.png"
+         alt="Voltar"
+         class="icon-btn"
+         id="btn-back"
+         onclick="history.back()" />
+
+    <!-- Bandeiras -->
+    <img src="brazil.png"
+         alt="Português"
+         class="flag"
+         id="flag-pt"
+         onclick="selectLang('pt')" />
+    <img src="japan.png"
+         alt="日本語"
+         class="flag"
+         id="flag-ja"
+         onclick="selectLang('ja')" />
+    <img src="indonesia.png"
+         alt="Bahasa Indonesia"
+         class="flag"
+         id="flag-id"
+         onclick="selectLang('id')" />
+
+    <!-- Botão Fechar (ícone) -->
+    <img src="close.png"
+         alt="Fechar"
+         class="icon-btn"
+         id="btn-close"
+         onclick="history.back()" />
   </div>
 
   <h2 id="langTitle">Selecione o idioma</h2>
@@ -187,8 +212,8 @@
     <div class="result-title" id="resLabel"></div>
     <div class="result" id="result"></div>
 
-    <!-- Botão FECHAR -->
-    <button class="close-btn" id="btnCloseText" onclick="goHome()">Fechar</button>
+    <!-- Botão FECHAR (texto) -->
+    <button class="close-btn" id="btnCloseText" onclick="history.back()">Fechar</button>
   </div>
 
   <script>
@@ -197,38 +222,30 @@
         langTitle: 'Selecione o idioma',
         res: 'Resultado:',
         closeBtn: 'Fechar',
-        summary: (max,min,Lmax,Lmin) => `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
+        summary: (max,min,Lmax,Lmin) =>
+          `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
       },
       ja: {
         langTitle: '言語を選択',
         res: '結果:',
         closeBtn: '閉じる',
-        summary: (max,min,Lmax,Lmin) => `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
+        summary: (max,min,Lmax,Lmin) =>
+          `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
       },
       id: {
         langTitle: 'Pilih bahasa',
         res: 'Hasil:',
         closeBtn: 'Tutup',
-        summary: (max,min,Lmax,Lmin) => `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
+        summary: (max,min,Lmax,Lmin) =>
+          `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
       }
     };
 
-    function summaryHTML(lang, max, min, Lmax, Lmin) {
-      const texto = texts2[lang].summary(max, min, Lmax, Lmin);
-      return texto
-        .replace(
-          `${Lmax} = ${max}`,
-          `<span class="red">${Lmax} = ${max}</span>`
-        )
-        .replace(
-          `${Lmin} = ${min}`,
-          `<span class="red">${Lmin} = ${min}</span>`
-        );
-    }
-
     function selectLang(lang) {
       sessionStorage.setItem('lang', lang);
-      document.querySelectorAll('img.flag').forEach(img => img.classList.remove('selected'));
+      document.querySelectorAll('img.flag').forEach(img =>
+        img.classList.remove('selected')
+      );
       document.getElementById('flag-' + lang).classList.add('selected');
 
       document.getElementById('langTitle').textContent = texts2[lang].langTitle;
@@ -236,12 +253,10 @@
       document.getElementById('btnCloseText').textContent = texts2[lang].closeBtn;
 
       const { max, min, Lmax, Lmin } = window._calcInfo;
-      document.getElementById('summary').innerHTML = summaryHTML(lang, max, min, Lmax, Lmin);
-    }
-
-    function goHome() {
-      // retorna para index.html
-      window.location.href = 'index.html';
+      document.getElementById('summary').innerHTML =
+        texts2[lang].summary(max, min, Lmax, Lmin)
+          .replace(`${Lmax} = ${max}`, `<span class="red">${Lmax} = ${max}</span>`)
+          .replace(`${Lmin} = ${min}`, `<span class="red">${Lmin} = ${min}</span>`);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -256,7 +271,7 @@
       keys.forEach((k,i) => {
         const el = document.getElementById('lbl'+k);
         const v  = pts[i];
-        if (i===idxMax || i===idxMin) {
+        if (i===idxMax||i===idxMin) {
           el.innerHTML = `${k} = <strong>${v}</strong>`;
           el.classList.add('red');
         } else {
@@ -266,7 +281,7 @@
 
       const avg = (max + min) / 2;
       const txt = Math.abs(avg).toFixed(1).replace('.', ',');
-      document.getElementById('result').textContent = (avg<0?'–':'') + txt;
+      document.getElementById('result').textContent = (avg<0?'–':'')+txt;
 
       selectLang(lang);
     });
