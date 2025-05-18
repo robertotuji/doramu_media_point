@@ -78,12 +78,12 @@
       margin-bottom: 24px;
     }
     .inputs label {
-      color: var(--text-dark);
       display: block;
       font-size: 0.9em;
       font-weight: 600;
       margin-bottom: 4px;
       text-align: left;
+      color: var(--text-dark);
     }
     .inputs input {
       width: 100%;
@@ -158,19 +158,22 @@
         title:   'Calculadora de Média dos Pontos',
         labels:  ['Ponto A','Ponto B','Ponto C','Ponto D','Ponto E','Ponto F','Ponto G','Ponto H'],
         btnCalc: 'Calcular',
-        btnClear:'Limpar'
+        btnClear:'Limpar',
+        theme:   ['🌙 Modo Noturno', '☀️ Modo Claro']
       },
       ja: {
         title:   '点の平均計算機',
         labels:  ['A点','B点','C点','D点','E点','F点','G点','H点'],
         btnCalc: '計算',
-        btnClear:'クリア'
+        btnClear:'クリア',
+        theme:   ['🌙 ダークモード', '☀️ 明るいモード']
       },
       id: {
         title:   'Kalkulator Rata-Rata Titik',
         labels:  ['Titik A','Titik B','Titik C','Titik D','Titik E','Titik F','Titik G','Titik H'],
         btnCalc: 'Hitung',
-        btnClear:'Bersihkan'
+        btnClear:'Bersihkan',
+        theme:   ['🌙 Mode Gelap', '☀️ Mode Terang']
       }
     };
 
@@ -191,20 +194,21 @@
     }
 
     function toggleDarkMode() {
-  const isDark = document.body.classList.toggle('dark');
-  sessionStorage.setItem('darkMode', isDark ? '1' : '0');
-  updateThemeButton();
-}
       const isDark = document.body.classList.toggle('dark');
       sessionStorage.setItem('darkMode', isDark ? '1' : '0');
-      document.getElementById('themeToggle').textContent = isDark ? '☀️ Modo Claro' : '🌙 Modo Noturno';
+      updateThemeButton();
+    }
+
+    function updateThemeButton() {
+      const isDark = document.body.classList.contains('dark');
+      const lang = sessionStorage.getItem('lang') || 'pt';
+      const label = texts[lang].theme;
+      document.getElementById('themeToggle').textContent = isDark ? label[1] : label[0];
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       const lang = sessionStorage.getItem('lang') || 'pt';
       selectLang(lang);
-  updateThemeButton();
-
       if (sessionStorage.getItem('darkMode') === '1') {
         document.body.classList.add('dark');
         updateThemeButton();
@@ -218,23 +222,7 @@
       window.location.href = 'pagina2.html';
     }
 
-    function updateThemeButton() {
-  const isDark = document.body.classList.contains('dark');
-  const lang = sessionStorage.getItem('lang') || 'pt';
-  const label = {
-    pt: isDark ? '☀️ Modo Claro' : '🌙 Modo Noturno',
-    ja: isDark ? '☀️ 明るいモード' : '🌙 ダークモード',
-    id: isDark ? '☀️ Mode Terang' : '🌙 Mode Gelap'
-  };
-  document.getElementById('themeToggle').textContent = label[lang];
-}
-
-function limparCampos() {
+    function limparCampos() {
       ['a','b','c','d','e','f','g','h'].forEach(id =>
         document.getElementById(id).value = ''
-      );
-      document.getElementById('a').focus();
-    }
-  </script>
-</body>
-</html>
+      )
