@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Resultado da Média dos Pontos</title>
   <link rel="manifest" href="manifest.json"/>
+  <!-- Meta para cor da barra de status no Android -->
+  <meta name="theme-color" content="#ff8800"/>
+  <!-- Ícone para iOS -->
+  <link rel="apple-touch-icon" href="app-icon.png" sizes="180x180"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Calc-Média"/>
   <style>
     :root {
       --primary-color: #e53935;
@@ -19,23 +26,46 @@
       background: var(--bg-light);
       color: var(--text-dark);
       text-align: center;
+      position: relative;
     }
+    /* SWITCHER + ÍCONES */
     #language-switcher {
       display: flex;
       justify-content: center;
       gap: 16px;
       margin-bottom: 16px;
+      position: relative;
     }
-    #language-switcher img {
+    #language-switcher img.flag {
       width: 64px;
       cursor: pointer;
       border-radius: 8px;
       border: 2px solid #000;
       transition: border-color 0.2s;
     }
-    #language-switcher img.selected {
+    #language-switcher img.flag.selected {
       border-color: var(--primary-color);
     }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      transition: background 0.2s;
+    }
+    .icon-btn:hover {
+      background: #eee;
+    }
+    #btn-back  { left: -60px; }  /* ajusta distância pro ícone ficar à esquerda */
+    #btn-close { right: -60px; } /* ajusta distância pro ícone ficar à direita */
     #langTitle {
       font-size: 1.75em;
       margin-bottom: 24px;
@@ -96,7 +126,7 @@
       margin-bottom: 0;
     }
     @media(max-width:520px) {
-      #language-switcher img { width:48px; }
+      #language-switcher img.flag { width:48px; }
       .container, .diagram { padding:16px; }
       #langTitle { font-size:1.5em; }
       .result { font-size:2em; }
@@ -104,12 +134,28 @@
   </style>
 </head>
 <body>
-  <h2 id="langTitle">Selecione o idioma</h2>
   <div id="language-switcher">
-    <img src="brazil.png" alt="Português" id="flag-pt" onclick="selectLang('pt')"/>
-    <img src="japan.png"  alt="日本語"     id="flag-ja" onclick="selectLang('ja')"/>
-    <img src="indonesia.png" alt="Bahasa Indonesia" id="flag-id" onclick="selectLang('id')"/>
+    <!-- Botão Voltar -->
+    <img src="back.png"
+         alt="Voltar"
+         class="icon-btn"
+         id="btn-back"
+         onclick="history.back()" />
+
+    <!-- Bandeiras -->
+    <img src="brazil.png"    alt="Português"         class="flag" id="flag-pt" onclick="selectLang('pt')" />
+    <img src="japan.png"     alt="日本語"             class="flag" id="flag-ja" onclick="selectLang('ja')" />
+    <img src="indonesia.png" alt="Bahasa Indonesia"  class="flag" id="flag-id" onclick="selectLang('id')" />
+
+    <!-- Botão Fechar -->
+    <img src="close.png"
+         alt="Fechar"
+         class="icon-btn"
+         id="btn-close"
+         onclick="window.close()" />
   </div>
+
+  <h2 id="langTitle">Selecione o idioma</h2>
 
   <div class="container">
     <div class="diagram">
@@ -152,7 +198,7 @@
 
     function selectLang(lang) {
       sessionStorage.setItem('lang', lang);
-      document.querySelectorAll('#language-switcher img')
+      document.querySelectorAll('#language-switcher img.flag')
         .forEach(img => img.classList.remove('selected'));
       document.getElementById('flag-' + lang).classList.add('selected');
       document.getElementById('langTitle').textContent = texts2[lang].langTitle;
