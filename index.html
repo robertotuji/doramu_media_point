@@ -1,171 +1,199 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calculadora de Média dos Pontos</title>
-  <link rel="manifest" href="manifest.json"/>
-  <meta name="theme-color" content="#ff8800"/>
-  <link rel="apple-touch-icon" href="app-icon.png" sizes="180x180"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="Calc-Média"/>
-
+  <link rel="manifest" href="manifest.json" />
   <style>
     :root {
       --primary-color: #e53935;
+      --accent-color: #ff8f00;
       --bg-light: #f5f5f5;
       --text-dark: #333;
       --shadow: rgba(0,0,0,0.1);
     }
-    * { box-sizing: border-box }
+    * { box-sizing: border-box; }
     body {
-      margin:0; padding:20px;
-      font-family:Arial,sans-serif;
-      background:var(--bg-light);
-      color:var(--text-dark);
-      text-align:center;
+      margin: 0; padding: 20px;
+      font-family: Arial, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      text-align: center;
     }
     #language-switcher {
-      display:flex;
-      justify-content:center;
-      gap:16px;
-      margin-bottom:16px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 24px;
     }
-    img.flag {
-      width:64px; cursor:pointer;
-      border:2px solid #000; border-radius:8px;
-      transition:border-color .2s;
+    #language-switcher img {
+      width: 64px;
+      cursor: pointer;
+      border-radius: 8px;
+      border: 2px solid #000;
+      transition: border-color 0.2s;
     }
-    img.flag.selected { border-color:var(--primary-color); }
-    h2#langTitle {
-      font-size:1.75em; margin-bottom:24px; font-weight:600;
+    #language-switcher img.selected {
+      border-color: var(--primary-color);
     }
-    .container {
-      max-width:500px; margin:0 auto;
-      background:#fff; padding:24px;
-      border-radius:8px; box-shadow:0 2px 12px var(--shadow);
+    h1 {
+      font-size: 1.75em;
+      margin-bottom: 24px;
+      font-weight: 600;
     }
-    .diagram {
-      position:relative;
-      background:#ccc;
-      border-radius:8px;
-      padding:24px; margin-bottom:24px;
+    .app-container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px var(--shadow);
     }
-    .diagram img {
-      width:100%; height:auto; display:block;
+    .preview {
+      background: #ccc;
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 24px;
     }
-    .label {
-      position:absolute; font-size:.9em;
-      color:var(--text-dark); text-shadow:0 0 2px #fff;
+    .preview img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
     }
-    .A { top:12%; left:50%; transform:translate(-50%,-50%); }
-    .B { top:28%; left:50%; transform:translate(-50%,-50%); }
-    .C { top:62%; left:50%; transform:translate(-50%,-50%); }
-    .D { top:88%; left:50%; transform:translate(-50%,-50%); }
-    .E { top:48%; left:58%; transform:translate(-50%,-50%); }
-    .F { top:50%; left:90%; transform:translate(-50%,-50%); }
-    .G { top:46%; left:40%; transform:translate(-50%,-50%); }
-    .H { top:50%; left:8%;  transform:translate(-50%,-50%); }
+    .inputs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .inputs label {
+      display: block;
+      font-size: 0.9em;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-align: left;
+    }
+    .inputs input {
+      width: 100%;
+      padding: 8px;
+      border: 2px solid var(--accent-color);
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+    .actions button {
+      flex: 1;
+      padding: 12px;
+      font-size: 1em;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #fff;
+      transition: opacity 0.2s;
+    }
+    .actions button:hover { opacity: 0.9; }
+    #btnCalc { background: var(--accent-color); }
+    #btnClear { background: #000; }
 
-    input[type="text"] {
-      width: calc(50% - 12px);
-      padding:12px; margin:6px;
-      border:2px solid var(--primary-color);
-      border-radius:4px; font-size:1em;
-    }
-    .buttons {
-      display:flex; justify-content:center; gap:16px; margin-top:16px;
-    }
-    button {
-      padding:12px 24px;
-      font-size:1em; font-weight:600;
-      border:none; border-radius:4px;
-      cursor:pointer;
-    }
-    button.calc { background:var(--primary-color); color:#fff; }
-    button.clear { background:#000; color:#fff; }
-
-    @media(max-width:520px) {
-      img.flag { width:48px; }
-      .container, .diagram { padding:16px; }
-      h2#langTitle { font-size:1.5em; }
+    /* EM TODAS AS TELAS MANTÉM DUAS COLUNAS */
+    @media (max-width: 500px) {
+      .inputs input { padding: 6px; }
+      #language-switcher img { width: 48px; }
+      h1 { font-size: 1.5em; }
     }
   </style>
 </head>
 <body>
-
   <div id="language-switcher">
-    <img src="brazil.png"     alt="Português"          class="flag" id="flag-pt" onclick="selectLang('pt')"/>
-    <img src="japan.png"      alt="日本語"             class="flag" id="flag-ja" onclick="selectLang('ja')"/>
-    <img src="indonesia.png"  alt="Bahasa Indonesia"   class="flag" id="flag-id" onclick="selectLang('id')"/>
+    <img src="brazil.png" alt="Português" id="flag-pt" onclick="selectLang('pt')" />
+    <img src="japan.png"  alt="日本語"     id="flag-ja" onclick="selectLang('ja')" />
+    <img src="indonesia.png" alt="Bahasa Indonesia" id="flag-id" onclick="selectLang('id')" />
   </div>
 
-  <h2 id="langTitle">Calculadora de Média dos Pontos</h2>
+  <h1 id="title">Calculadora de Média dos Pontos</h1>
 
-  <div class="container">
-    <div class="diagram">
-      <img src="doramu.png" alt="Diagrama de Pontos"/>
-      <span id="lblA" class="label A">A</span>
-      <span id="lblB" class="label B">B</span>
-      <span id="lblC" class="label C">C</span>
-      <span id="lblD" class="label D">D</span>
-      <span id="lblE" class="label E">E</span>
-      <span id="lblF" class="label F">F</span>
-      <span id="lblG" class="label G">G</span>
-      <span id="lblH" class="label H">H</span>
+  <div class="app-container">
+    <div class="preview">
+      <img src="doramu.png" alt="Diagrama de Pontos" />
     </div>
-
     <div class="inputs">
-      <input type="text" id="ptA" placeholder="Ponto A"/>
-      <input type="text" id="ptB" placeholder="Ponto B"/>
-      <input type="text" id="ptC" placeholder="Ponto C"/>
-      <input type="text" id="ptD" placeholder="Ponto D"/>
-      <input type="text" id="ptE" placeholder="Ponto E"/>
-      <input type="text" id="ptF" placeholder="Ponto F"/>
-      <input type="text" id="ptG" placeholder="Ponto G"/>
-      <input type="text" id="ptH" placeholder="Ponto H"/>
+      <div><label for="a" id="label-a">Ponto A</label><input type="number" id="a" /></div>
+      <div><label for="b" id="label-b">Ponto B</label><input type="number" id="b" /></div>
+      <div><label for="c" id="label-c">Ponto C</label><input type="number" id="c" /></div>
+      <div><label for="d" id="label-d">Ponto D</label><input type="number" id="d" /></div>
+      <div><label for="e" id="label-e">Ponto E</label><input type="number" id="e" /></div>
+      <div><label for="f" id="label-f">Ponto F</label><input type="number" id="f" /></div>
+      <div><label for="g" id="label-g">Ponto G</label><input type="number" id="g" /></div>
+      <div><label for="h" id="label-h">Ponto H</label><input type="number" id="h" /></div>
     </div>
-
-    <div class="buttons">
-      <button class="calc" onclick="goCalc()">Calcular</button>
-      <button class="clear" onclick="clearAll()">Limpar</button>
+    <div class="actions">
+      <button id="btnCalc" onclick="calcularMedia()">Calcular</button>
+      <button id="btnClear" onclick="limparCampos()">Limpar</button>
     </div>
   </div>
 
   <script>
-    const texts1 = {
-      pt: 'Calculadora de Média dos Pontos',
-      ja: 'ポイント平均計算機',
-      id: 'Kalkulator Rata-Rata Titik'
+    const texts = {
+      pt: {
+        title:   'Calculadora de Média dos Pontos',
+        labels:  ['Ponto A','Ponto B','Ponto C','Ponto D','Ponto E','Ponto F','Ponto G','Ponto H'],
+        btnCalc: 'Calcular',
+        btnClear:'Limpar'
+      },
+      ja: {
+        title:   '点の平均計算機',
+        labels:  ['A点','B点','C点','D点','E点','F点','G点','H点'],
+        btnCalc: '計算',
+        btnClear:'クリア'
+      },
+      id: {
+        title:   'Kalkulator Rata-Rata Titik',
+        labels:  ['Titik A','Titik B','Titik C','Titik D','Titik E','Titik F','Titik G','Titik H'],
+        btnCalc: 'Hitung',
+        btnClear:'Bersihkan'
+      }
     };
 
     function selectLang(lang) {
       sessionStorage.setItem('lang', lang);
-      document.querySelectorAll('img.flag').forEach(f=>f.classList.remove('selected'));
-      document.getElementById(`flag-${lang}`).classList.add('selected');
-      document.getElementById('langTitle').textContent = texts1[lang];
+      document.querySelectorAll('#language-switcher img').forEach(img =>
+        img.classList.remove('selected')
+      );
+      document.getElementById('flag-' + lang).classList.add('selected');
+      const cfg = texts[lang];
+      document.getElementById('title').textContent = cfg.title;
+      ['a','b','c','d','e','f','g','h'].forEach((k,i) =>
+        document.getElementById('label-' + k).textContent = cfg.labels[i]
+      );
+      document.getElementById('btnCalc').textContent  = cfg.btnCalc;
+      document.getElementById('btnClear').textContent = cfg.btnClear;
     }
 
-    function clearAll() {
-      document.querySelectorAll('input[type="text"]').forEach(i=>i.value='');
-    }
+    window.addEventListener('DOMContentLoaded', () => {
+      const lang = sessionStorage.getItem('lang') || 'pt';
+      selectLang(lang);
+    });
 
-    function goCalc() {
-      const pts = ['ptA','ptB','ptC','ptD','ptE','ptF','ptG','ptH']
-        .map(id=>parseFloat(document.getElementById(id).value.replace(',', '.')) || 0);
-      sessionStorage.setItem('points', JSON.stringify(pts));
+    function calcularMedia() {
+      const vals = ['a','b','c','d','e','f','g','h']
+        .map(id => parseFloat(document.getElementById(id).value) || 0);
+      sessionStorage.setItem('points', JSON.stringify(vals));
       window.location.href = 'pagina2.html';
     }
 
-    // ao carregar, limpa tudo
-    window.addEventListener('DOMContentLoaded', ()=>{
-      sessionStorage.removeItem('points');
-      clearAll();
-      selectLang(sessionStorage.getItem('lang')||'pt');
-    });
+    function limparCampos() {
+      ['a','b','c','d','e','f','g','h'].forEach(id =>
+        document.getElementById(id).value = ''
+      );
+      document.getElementById('a').focus();
+    }
   </script>
-
-  <script src="service-worker.js"></script>
 </body>
 </html>
