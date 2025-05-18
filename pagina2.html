@@ -45,12 +45,16 @@
       box-shadow: 0 2px 12px var(--shadow);
     }
     .diagram {
+      position: relative;
+
       background: #ccc;
       padding: 20px;
       border-radius: 8px;
       margin-bottom: 20px;
     }
     body.dark .diagram {
+      position: relative;
+
       background: #000;
     }
     .diagram img {
@@ -80,7 +84,26 @@
       font-size: 1em;
       cursor: pointer;
     }
-  </style>
+  
+.label {
+  position: absolute;
+  font-size: 0.9em;
+  color: #000;
+}
+.label.red {
+  color: red;
+  font-weight: bold;
+}
+.A { top: 5%;  left: 50%; transform: translate(-50%, -50%); }
+.B { top: 20%; left: 50%; transform: translate(-50%, -50%); }
+.C { top: 75%; left: 50%; transform: translate(-50%, -50%); }
+.D { top: 90%; left: 50%; transform: translate(-50%, -50%); }
+.E { top: 50%; left: 80%; transform: translate(-50%, -50%); }
+.F { top: 50%; left: 95%; transform: translate(-50%, -50%); }
+.G { top: 50%; left: 20%; transform: translate(-50%, -50%); }
+.H { top: 50%; left: 5%;  transform: translate(-50%, -50%); }
+
+</style>
 </head>
 <body>
   <div id="language-switcher" style="margin-bottom: 16px;">
@@ -94,6 +117,15 @@
   <div class="container">
     <div class="diagram">
       <img id="mainImage" src="doramu2.png" alt="Resultado" />
+      <span id="lblA" class="label A"></span>
+      <span id="lblB" class="label B"></span>
+      <span id="lblC" class="label C"></span>
+      <span id="lblD" class="label D"></span>
+      <span id="lblE" class="label E"></span>
+      <span id="lblF" class="label F"></span>
+      <span id="lblG" class="label G"></span>
+      <span id="lblH" class="label H"></span>
+
     </div>
     <div class="summary" id="summary" style="color: #000;">...</div>
     <div class="result-title" id="resLabel" style="color: #000;">Resultado:</div>
@@ -166,6 +198,19 @@
       const Lmax = keys[idxMax];
       const Lmin = keys[idxMin];
       window._calcInfo = { max, min, Lmax, Lmin };
+      
+      const labels = ['A','B','C','D','E','F','G','H'];
+      labels.forEach((label, i) => {
+        const el = document.getElementById('lbl' + label);
+        const val = pts[i];
+        if (i === idxMax || i === idxMin) {
+          el.classList.add('red');
+          el.innerHTML = `${label} = <strong>${val}</strong>`;
+        } else {
+          el.textContent = `${label} = ${val}`;
+        }
+      });
+
       document.getElementById('result').textContent = isNaN((max + min)) ? '0,0' : ((max + min) / 2).toFixed(1).replace('.', ',');
       selectLang(lang);
       if (sessionStorage.getItem('darkMode') === '1') {
