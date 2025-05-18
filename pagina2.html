@@ -1,20 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Resultado da Média dos Pontos</title>
-
-  <!-- PWA manifest + tema -->
-  <link rel="manifest" href="manifest.json"/>
-  <meta name="theme-color" content="#ff8800"/>
-
-  <!-- ícone iOS -->
-  <link rel="apple-touch-icon" href="app-icon.png" sizes="180x180"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="Calc-Média"/>
-
+  <title>Resultado da Média</title>
   <style>
     :root {
       --primary-color: #e53935;
@@ -22,268 +12,166 @@
       --text-dark: #333;
       --shadow: rgba(0,0,0,0.1);
     }
+    body.dark {
+      --primary-color: #ff7043;
+      --bg-light: #121212;
+      --text-dark: #eee;
+      --shadow: rgba(255,255,255,0.1);
+    }
     * { box-sizing: border-box; }
     body {
-      margin:0; padding:20px;
-      font-family:Arial,sans-serif;
-      background:var(--bg-light);
-      color:var(--text-dark);
-      text-align:center;
-      position:relative;
+      margin: 0; padding: 20px;
+      font-family: Arial, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      text-align: center;
     }
-
-    /* Barra de idioma + ícones */
-    #language-switcher {
-      display:flex;
-      justify-content:center;
-      gap:16px;
-      margin-bottom:16px;
-      position:relative;
+    #themeToggle {
+      margin: 12px;
+      padding: 8px 16px;
+      border: 2px solid var(--primary-color);
+      background: none;
+      border-radius: 6px;
+      color: var(--text-dark);
+      cursor: pointer;
     }
-    img.flag {
-      width:64px;
-      cursor:pointer;
-      border:2px solid #000;
-      border-radius:8px;
-      transition:border-color .2s;
-    }
-    img.flag.selected {
-      border-color:var(--primary-color);
-    }
-    .icon-btn {
-      width:40px;
-      height:40px;
-      background:#fff;
-      border:2px solid #000;
-      border-radius:12px;
-      box-shadow:0 1px 4px rgba(0,0,0,0.2);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      position:absolute;
-      top:0;
-      transition:background .2s;
-    }
-    .icon-btn:hover { background:#eee; }
-    #btn-back  { left:-60px; }
-    #btn-close { right:-60px; }
-
-    h2#langTitle {
-      font-size:1.75em;
-      margin-bottom:24px;
-      font-weight:600;
-    }
-
+    h2 { font-size: 1.6em; margin-bottom: 16px; }
     .container {
-      max-width:500px;
-      margin:0 auto;
-      background:#fff;
-      padding:24px;
-      border-radius:8px;
-      box-shadow:0 2px 12px var(--shadow);
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px var(--shadow);
     }
     .diagram {
-      position:relative;
-      background:#ccc;
-      border-radius:8px;
-      padding:24px;
-      margin-bottom:24px;
+      background: #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    body.dark .diagram {
+      background: #000;
     }
     .diagram img {
-      width:100%;
-      height:auto;
-      display:block;
+      max-width: 100%;
+      height: auto;
     }
-
-    .label {
-      position:absolute;
-      font-size:.9em;
-      color:var(--text-dark);
-      text-shadow:0 0 2px #fff;
-    }
-    .label.red,
-    .label.red strong,
-    .red {
-      color: var(--primary-color) !important;
-      font-weight: bold;
-    }
-    .A { top:12%; left:50%; transform:translate(-50%,-50%); }
-    .B { top:28%; left:50%; transform:translate(-50%,-50%); }
-    .C { top:62%; left:50%; transform:translate(-50%,-50%); }
-    .D { top:88%; left:50%; transform:translate(-50%,-50%); }
-    .E { top:48%; left:58%; transform:translate(-50%,-50%); }
-    .F { top:50%; left:90%; transform:translate(-50%,-50%); }
-    .G { top:46%; left:40%; transform:translate(-50%,-50%); }
-    .H { top:50%; left:8%;  transform:translate(-50%,-50%); }
-
     .summary {
-      font-size:1.1em;
-      margin-bottom:16px;
-      font-weight:500;
+      font-size: 1em;
+      margin: 10px 0;
     }
     .result-title {
-      font-size:1.2em;
-      margin-bottom:8px;
-      font-weight:600;
+      font-weight: bold;
+      margin-top: 10px;
     }
     .result {
-      font-size:2.5em;
-      color:var(--primary-color);
-      font-weight:700;
-      margin:0 0 24px;
+      font-size: 2em;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 20px;
     }
-
-    /* Botão FECHAR */
     .close-btn {
-      padding: 12px 24px;
-      font-size: 1em;
-      font-weight: 600;
-      color: #fff;
       background: var(--primary-color);
+      color: #fff;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
+      padding: 10px 24px;
+      font-size: 1em;
       cursor: pointer;
-      box-shadow: 0 2px 6px var(--shadow);
-      transition: opacity 0.2s;
-    }
-    .close-btn:hover {
-      opacity: 0.9;
-    }
-
-    @media(max-width:520px) {
-      img.flag { width:48px; }
-      .container, .diagram { padding:16px; }
-      h2#langTitle { font-size:1.5em; }
-      .result { font-size:2em; }
     }
   </style>
 </head>
 <body>
-  <div id="language-switcher">
-    <!-- Botão Voltar -->
-    <img src="back.png"
-         alt="Voltar"
-         class="icon-btn"
-         id="btn-back"
-         onclick="history.back()" />
-
-    <!-- Bandeiras -->
-    <img src="brazil.png"
-         alt="Português"
-         class="flag"
-         id="flag-pt"
-         onclick="selectLang('pt')" />
-    <img src="japan.png"
-         alt="日本語"
-         class="flag"
-         id="flag-ja"
-         onclick="selectLang('ja')" />
-    <img src="indonesia.png"
-         alt="Bahasa Indonesia"
-         class="flag"
-         id="flag-id"
-         onclick="selectLang('id')" />
-
-    <!-- Botão Fechar (ícone) -->
-    <img src="close.png"
-         alt="Fechar"
-         class="icon-btn"
-         id="btn-close"
-         onclick="history.back()" />
-  </div>
-
+  <div id="language-switcher" style="margin-bottom: 16px;">
+  <img src="brazil.png" alt="Português" class="flag" id="flag-pt" onclick="selectLang('pt')" style="width:48px;cursor:pointer;border-radius:8px;border:2px solid #000;">
+  <img src="japan.png"  alt="日本語" class="flag" id="flag-ja" onclick="selectLang('ja')" style="width:48px;cursor:pointer;border-radius:8px;border:2px solid #000;">
+  <img src="indonesia.png" alt="Bahasa Indonesia" class="flag" id="flag-id" onclick="selectLang('id')" style="width:48px;cursor:pointer;border-radius:8px;border:2px solid #000;">
+</div>
+<button id="themeToggle" onclick="toggleDarkMode()">🌙 Modo Noturno</button>
   <h2 id="langTitle">Selecione o idioma</h2>
 
   <div class="container">
     <div class="diagram">
-      <img src="doramu2.png" alt="Diagrama de Pontos"/>
-      <span id="lblA" class="label A"></span>
-      <span id="lblB" class="label B"></span>
-      <span id="lblC" class="label C"></span>
-      <span id="lblD" class="label D"></span>
-      <span id="lblE" class="label E"></span>
-      <span id="lblF" class="label F"></span>
-      <span id="lblG" class="label G"></span>
-      <span id="lblH" class="label H"></span>
+      <img id="mainImage" src="doramu2.png" alt="Resultado" />
     </div>
-
-    <div class="summary" id="summary"></div>
-    <div class="result-title" id="resLabel"></div>
-    <div class="result" id="result"></div>
-
-    <!-- Botão FECHAR (texto) -->
-    <button class="close-btn" id="btnCloseText" onclick="history.back()">Fechar</button>
+    <div class="summary" id="summary">...</div>
+    <div class="result-title" id="resLabel">Resultado:</div>
+    <div class="result" id="result">0,0</div>
+    <button class="close-btn" onclick="history.back()" id="btnCloseText">Fechar</button>
   </div>
 
   <script>
-    const texts2 = {
+    const texts = {
       pt: {
         langTitle: 'Selecione o idioma',
         res: 'Resultado:',
-        closeBtn: 'Fechar',
-        summary: (max,min,Lmax,Lmin) =>
-          `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
+        close: 'Fechar',
+        theme: ['🌙 Modo Noturno', '☀️ Modo Claro'],
+        summary: (max,min,Lmax,Lmin) => `Os pontos definidos foram ${Lmax} = ${max} e ${Lmin} = ${min}`
       },
       ja: {
         langTitle: '言語を選択',
         res: '結果:',
-        closeBtn: '閉じる',
-        summary: (max,min,Lmax,Lmin) =>
-          `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
+        close: '閉じる',
+        theme: ['🌙 ダークモード', '☀️ 明るいモード'],
+        summary: (max,min,Lmax,Lmin) => `設定された点は ${Lmax} = ${max} と ${Lmin} = ${min}`
       },
       id: {
         langTitle: 'Pilih bahasa',
         res: 'Hasil:',
-        closeBtn: 'Tutup',
-        summary: (max,min,Lmax,Lmin) =>
-          `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
+        close: 'Tutup',
+        theme: ['🌙 Mode Gelap', '☀️ Mode Terang'],
+        summary: (max,min,Lmax,Lmin) => `Titik yang ditentukan adalah ${Lmax} = ${max} dan ${Lmin} = ${min}`
       }
     };
 
+    function updateThemeButton() {
+      const isDark = document.body.classList.contains('dark');
+      const lang = sessionStorage.getItem('lang') || 'pt';
+      const label = texts[lang].theme;
+      const btn = document.getElementById('themeToggle');
+      btn.textContent = isDark ? label[1] : label[0];
+      btn.style.color = isDark ? '#fff' : '#000';
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.body.classList.toggle('dark');
+      sessionStorage.setItem('darkMode', isDark ? '1' : '0');
+      document.getElementById('mainImage').src = isDark ? 'doramunight.png' : 'doramu2.png';
+      updateThemeButton();
+    }
+
     function selectLang(lang) {
       sessionStorage.setItem('lang', lang);
-      document.querySelectorAll('img.flag').forEach(img =>
-        img.classList.remove('selected')
-      );
-      document.getElementById('flag-' + lang).classList.add('selected');
-
-      document.getElementById('langTitle').textContent = texts2[lang].langTitle;
-      document.getElementById('resLabel').textContent   = texts2[lang].res;
-      document.getElementById('btnCloseText').textContent = texts2[lang].closeBtn;
-
       const { max, min, Lmax, Lmin } = window._calcInfo;
-      document.getElementById('summary').innerHTML =
-        texts2[lang].summary(max, min, Lmax, Lmin)
-          .replace(`${Lmax} = ${max}`, `<span class="red">${Lmax} = ${max}</span>`)
-          .replace(`${Lmin} = ${min}`, `<span class="red">${Lmin} = ${min}</span>`);
+      document.getElementById('langTitle').textContent = texts[lang].langTitle;
+      document.getElementById('resLabel').textContent = texts[lang].res;
+      document.getElementById('btnCloseText').textContent = texts[lang].close;
+      document.getElementById('summary').innerHTML = texts[lang].summary(max, min, Lmax, Lmin)
+        .replace(`${Lmax} = ${max}`, `<span style='color:red; font-weight:bold;'>${Lmax} = ${max}</span>`)
+        .replace(`${Lmin} = ${min}`, `<span style='color:red; font-weight:bold;'>${Lmin} = ${min}</span>`);
+      updateThemeButton();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       const lang = sessionStorage.getItem('lang') || 'pt';
+      const pts = JSON.parse(sessionStorage.getItem('points') || '[]');
+      if (!pts.length) return document.getElementById('summary').textContent = '⚠️ Nenhum dado foi encontrado. Volte e preencha os pontos.';
+      const max = Math.max(...pts);
+      const min = Math.min(...pts);
       const keys = ['A','B','C','D','E','F','G','H'];
-      const pts  = JSON.parse(sessionStorage.getItem('points') || '[]');
-      const max  = Math.max(...pts), min = Math.min(...pts);
-      const idxMax = pts.indexOf(max), idxMin = pts.indexOf(min);
-      const Lmax = keys[idxMax], Lmin = keys[idxMin];
+      const idxMax = pts.indexOf(max);
+      const idxMin = pts.indexOf(min);
+      const Lmax = keys[idxMax];
+      const Lmin = keys[idxMin];
       window._calcInfo = { max, min, Lmax, Lmin };
-
-      keys.forEach((k,i) => {
-        const el = document.getElementById('lbl'+k);
-        const v  = pts[i];
-        if (i===idxMax||i===idxMin) {
-          el.innerHTML = `${k} = <strong>${v}</strong>`;
-          el.classList.add('red');
-        } else {
-          el.textContent = `${k} = ${v}`;
-        }
-      });
-
-      const avg = (max + min) / 2;
-      const txt = Math.abs(avg).toFixed(1).replace('.', ',');
-      document.getElementById('result').textContent = (avg<0?'–':'')+txt;
-
+      document.getElementById('result').textContent = isNaN((max + min)) ? '0,0' : ((max + min) / 2).toFixed(1).replace('.', ',');
       selectLang(lang);
+      if (sessionStorage.getItem('darkMode') === '1') {
+        document.body.classList.add('dark');
+        document.getElementById('mainImage').src = 'doramunight.png';
+      }
     });
   </script>
 </body>
